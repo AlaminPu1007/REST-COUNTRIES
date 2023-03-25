@@ -44,11 +44,18 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         paddingHorizontal: 10,
-        paddingVertical: 30,
+        paddingVertical: 35,
         flexDirection: 'row',
         alignContent: 'center',
         justifyContent: 'space-between',
-        elevation: 5,
+        elevation: 1.5,
+        // for ios
+        shadowProp: {
+            shadowColor: '#171717',
+            shadowOffset: {width: -2, height: 4},
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
+        },
     },
     welcomeTextStyle: {
         fontWeight: '700',

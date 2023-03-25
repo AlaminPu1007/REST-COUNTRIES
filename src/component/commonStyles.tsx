@@ -11,15 +11,17 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: theme.BACKGROUND_COLOR_LIGHT,
     },
-    light_background_color: {backgroundColor: theme.BACKGROUND_COLOR_LIGHT},
-    dark_background_color: {
-        backgroundColor: theme.BACKGROUND_COLOR_HEADER_DARK,
-    },
+
     dark_container: {
         flex: 1,
         width: '100%',
-        backgroundColor: theme.BACKGROUND_COLOR_HEADER_DARK,
+        backgroundColor: theme.BACKGROUND_COLOR_DARK,
         alignItems: 'center',
+    },
+
+    light_background_color: {backgroundColor: theme.PRIMARY_COLOR_LIGHT},
+    dark_background_color: {
+        backgroundColor: theme.BACKGROUND_COLOR_HEADER_DARK,
     },
     /** This portion for light-theme */
     //style for large text
