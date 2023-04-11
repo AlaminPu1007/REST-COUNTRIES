@@ -1,19 +1,37 @@
-import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
+import {
+    Image,
+    StyleSheet,
+    Text,
+    View,
+    Dimensions,
+    TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import ThemeSchema from '../../../component/ThemeSchema';
 import commonStyles from '../../../component/commonStyles';
 import theme from '../../../component/theme';
+import {Props} from '../../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
+import {useNavigation} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 
 const RenderFlag = ({data}: any) => {
     // get user device theme color
-    const userTheme = ThemeSchema();
-    const colorScheme = userTheme === 'light';
+    const [themeValue] = ThemeSchema();
+    // get boolean value of theme
+    const isLightMode = themeValue === 'light';
+    // define use-navigation to access navigation
+    const navigation: any = useNavigation<Props>();
+
+    const navigateToItemPreview = () =>
+        navigation.navigate('preview', {itemName: data.name.common});
+
     return (
-        <View
+        <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={navigateToItemPreview}
             style={[
-                colorScheme
+                isLightMode
                     ? commonStyles.light_background_color
                     : commonStyles.dark_background_color,
                 styles.container,
@@ -22,7 +40,7 @@ const RenderFlag = ({data}: any) => {
             <View style={styles.countryInfo}>
                 <Text
                     style={[
-                        colorScheme
+                        isLightMode
                             ? commonStyles.light_large_text_style
                             : commonStyles.dark_large_text_style,
                         styles.countryNameStyle,
@@ -41,7 +59,7 @@ const RenderFlag = ({data}: any) => {
                     </Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

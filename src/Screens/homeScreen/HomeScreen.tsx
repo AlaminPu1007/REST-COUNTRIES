@@ -1,21 +1,27 @@
-import {SafeAreaView, StyleSheet, View, Text, ScrollView} from 'react-native';
+import {
+    SafeAreaView,
+    StyleSheet,
+    View,
+    Text,
+    ScrollView,
+    ActivityIndicator,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import commonStyles from '../../component/commonStyles';
 import ThemeSchema from '../../component/ThemeSchema';
 import Header from '../../commonComponent/Header';
 import SearchComponent from '../../commonComponent/SearchComponent';
 import Api from '../../api/Api';
-
 import RenderFlag from './homeComponent/RenderFlag';
 
 const HomeScreen = () => {
     // get user device theme color
-    const userTheme = ThemeSchema();
-    const colorScheme = userTheme === 'light';
+    const [themeValue] = ThemeSchema();
+    // get boolean value of theme
+    const isLightMode = themeValue === 'light';
 
     // define state
     const [countryList, setCountriesList] = useState([]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [loading, setLoading] = useState(true);
 
     /**
@@ -55,7 +61,7 @@ const HomeScreen = () => {
         <SafeAreaView style={commonStyles.safeAreaViewStyle}>
             <View
                 style={[
-                    colorScheme
+                    isLightMode
                         ? commonStyles.light_container
                         : commonStyles.dark_container,
                     styles.container,
@@ -69,20 +75,30 @@ const HomeScreen = () => {
                     contentContainerStyle={styles.scrollViewStyle}>
                     <View style={styles.scrollViewChildContainer}>
                         <SearchComponent />
-                        {countryList?.length ? (
-                            countryList?.map((item: any) => {
-                                return (
-                                    <View
-                                        style={styles.scrollViewChildContainer}
-                                        key={item?.name?.common || Date.now()}>
-                                        <RenderFlag data={item} />
-                                    </View>
-                                );
-                            })
+                        {!loading ? (
+                            countryList?.length ? (
+                                countryList?.map((item: any) => {
+                                    return (
+                                        <View
+                                            style={
+                                                styles.scrollViewChildContainer
+                                            }
+                                            key={
+                                                item?.name?.common || Date.now()
+                                            }>
+                                            <RenderFlag data={item} />
+                                        </View>
+                                    );
+                                })
+                            ) : (
+                                <Text>No item is found!</Text>
+                            )
                         ) : (
-                            <Text>No item is found!</Text>
+                            <View>
+                                <ActivityIndicator size="large" />
+                                <Text>Loading...</Text>
+                            </View>
                         )}
-                        <Text>some</Text>
                     </View>
                 </ScrollView>
             </View>
@@ -99,7 +115,7 @@ const styles = StyleSheet.create({
     },
     scrollViewStyle: {
         flexGrow: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         width: '100%',
     },
     scrollView: {

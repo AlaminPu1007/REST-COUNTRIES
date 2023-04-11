@@ -5,20 +5,21 @@ import ThemeSchema from '../component/ThemeSchema';
 
 const Header = () => {
     // get user device theme color
-    const userTheme = ThemeSchema();
-    const colorScheme = userTheme === 'light';
+    const [themeValue] = ThemeSchema();
+    // get boolean value of theme
+    const isLightMode = themeValue === 'light';
 
     return (
         <View
             style={[
-                colorScheme
+                isLightMode
                     ? commonStyles.light_background_color
                     : commonStyles.dark_background_color,
                 styles.container,
             ]}>
             <Text
                 style={[
-                    colorScheme
+                    isLightMode
                         ? commonStyles.light_large_text_style
                         : commonStyles.dark_large_text_style,
                     styles.welcomeTextStyle,
@@ -26,8 +27,9 @@ const Header = () => {
                 Where in the world ?
             </Text>
             <Text
+                // onPress={toggleTheme}
                 style={[
-                    colorScheme
+                    isLightMode
                         ? commonStyles.light_medium_text_style
                         : commonStyles.dark_medium_text_style,
                     styles.darkTextStyle,
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         paddingHorizontal: 10,
-        paddingVertical: 35,
+        paddingVertical: 20,
         flexDirection: 'row',
         alignContent: 'center',
         justifyContent: 'space-between',

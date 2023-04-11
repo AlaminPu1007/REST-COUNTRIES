@@ -6,8 +6,10 @@ import theme from '../component/theme';
 
 const SearchComponent = () => {
     // get user device theme color
-    const userTheme = ThemeSchema();
-    const colorScheme = userTheme === 'light';
+    const [themeValue] = ThemeSchema();
+    // get boolean value of theme
+    const isLightMode = themeValue === 'light';
+
     // define state here
     const [textInput, setTextInput] = useState('');
 
@@ -21,14 +23,14 @@ const SearchComponent = () => {
     return (
         <View
             style={[
-                colorScheme
+                isLightMode
                     ? commonStyles.light_background_color
                     : commonStyles.dark_background_color,
                 styles.container,
             ]}>
             <TextInput
                 value={textInput}
-                placeholder="Search for a country"
+                placeholder="Search for a country..."
                 onChangeText={onChangeTextMethod}
                 style={styles.textInputStyle}
                 placeholderTextColor={theme.PLACE_HOLDER_TEXT_COLOR}
@@ -41,8 +43,8 @@ export default SearchComponent;
 const styles = StyleSheet.create({
     container: {
         width: '95%',
-        marginVertical: 35,
-        paddingVertical: 10,
+        marginVertical: 15,
+        paddingVertical: 5,
         elevation: 1,
         borderRadius: 5,
     },
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
         padding: 0,
         paddingHorizontal: 15,
         paddingVertical: 10,
-        fontSize: theme.FONT_SIZE_LARGE,
-        color: theme.PLACE_HOLDER_TEXT_COLOR,
+        fontSize: theme.FONT_SIZE_MEDIUM,
+        color: theme.TEXT_PRIMARY_COLOR,
         letterSpacing: 0.5,
     },
 });
