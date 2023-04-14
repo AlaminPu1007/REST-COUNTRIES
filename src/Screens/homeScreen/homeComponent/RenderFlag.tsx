@@ -24,7 +24,7 @@ const RenderFlag = ({data}: any) => {
     const navigation: any = useNavigation<Props>();
 
     const navigateToItemPreview = () =>
-        navigation.navigate('preview', {itemName: data.name.common});
+        navigation.navigate('preview', {name: data.name.common});
 
     return (
         <TouchableOpacity

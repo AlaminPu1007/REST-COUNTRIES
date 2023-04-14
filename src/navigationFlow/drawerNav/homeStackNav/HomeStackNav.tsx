@@ -8,8 +8,23 @@ import PreviewScreen from '../../../Screens/homeScreen/PreviewScreen';
 
 export type RootHomeStackParamList = {
     Dashboard: undefined,
-    preview: {itemName: string},
+    preview: {name: string},
 };
+
+export type HomeScreenNavigationProp = NativeStackScreenProps<
+    RootHomeStackParamList,
+    // eslint-disable-next-line prettier/prettier
+    'Dashboard'
+>;
+
+// This allows us to type check route names and params which you're navigating using navigate,
+// push etc. The name of the current route is necessary to type check the params in route.params
+// https://reactnavigation.org/docs/typescript/#type-checking-screens
+export type PreviewScreenNavigationProp = NativeStackScreenProps<
+    RootHomeStackParamList,
+    // eslint-disable-next-line prettier/prettier
+    'preview'
+>;
 
 export type Props = NativeStackScreenProps<RootHomeStackParamList>;
 

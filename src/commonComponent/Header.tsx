@@ -2,8 +2,10 @@ import {Text, View, StyleSheet} from 'react-native';
 import React from 'react';
 import commonStyles from '../component/commonStyles';
 import ThemeSchema from '../component/ThemeSchema';
-
-const Header = () => {
+interface Props {
+    title: string;
+}
+const Header = ({title = 'Where in the world ?'}: Props) => {
     // get user device theme color
     const [themeValue] = ThemeSchema();
     // get boolean value of theme
@@ -24,7 +26,7 @@ const Header = () => {
                         : commonStyles.dark_large_text_style,
                     styles.welcomeTextStyle,
                 ]}>
-                Where in the world ?
+                {title}
             </Text>
             <Text
                 // onPress={toggleTheme}

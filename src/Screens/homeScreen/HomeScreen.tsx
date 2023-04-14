@@ -66,7 +66,7 @@ const HomeScreen = () => {
                         : commonStyles.dark_container,
                     styles.container,
                 ]}>
-                <Header />
+                <Header title="Where in the world ?" />
 
                 {/* render all flag */}
                 <ScrollView
