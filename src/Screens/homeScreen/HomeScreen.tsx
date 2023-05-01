@@ -6,17 +6,21 @@ import {
     ScrollView,
     ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import commonStyles from '../../component/commonStyles';
-import ThemeSchema from '../../component/ThemeSchema';
+// import ThemeSchema from '../../component/ThemeSchema';
 import Header from '../../commonComponent/Header';
 import SearchComponent from '../../commonComponent/SearchComponent';
 import Api from '../../api/Api';
 import RenderFlag from './homeComponent/RenderFlag';
+import {Context as DarkModeContext} from '../../context/DarkModeContext';
 
 const HomeScreen = () => {
-    // get user device theme color
-    const [themeValue] = ThemeSchema();
+    // get user device theme color from context
+    const {
+        state: {themeValue},
+    } = useContext(DarkModeContext);
+
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
 

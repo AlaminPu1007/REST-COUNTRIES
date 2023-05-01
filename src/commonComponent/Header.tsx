@@ -1,15 +1,23 @@
-import {Text, View, StyleSheet} from 'react-native';
-import React from 'react';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useContext} from 'react';
 import commonStyles from '../component/commonStyles';
-import ThemeSchema from '../component/ThemeSchema';
+import {Context as DarkModeContext} from '../context/DarkModeContext';
 interface Props {
     title: string;
 }
 const Header = ({title = 'Where in the world ?'}: Props) => {
-    // get user device theme color
-    const [themeValue] = ThemeSchema();
+    const {
+        state: {themeValue},
+        setThemeValue,
+    } = useContext(DarkModeContext);
+
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
+
+    const updateThemeValue = () => {
+        const value = themeValue === 'light' ? 'dark' : 'light';
+        setThemeValue(value);
+    };
 
     return (
         <View
@@ -28,16 +36,18 @@ const Header = ({title = 'Where in the world ?'}: Props) => {
                 ]}>
                 {title}
             </Text>
-            <Text
-                // onPress={toggleTheme}
-                style={[
-                    isLightMode
-                        ? commonStyles.light_medium_text_style
-                        : commonStyles.dark_medium_text_style,
-                    styles.darkTextStyle,
-                ]}>
-                Dark Mode
-            </Text>
+            <TouchableOpacity onPress={updateThemeValue}>
+                <Text
+                    // onPress={toggleTheme}
+                    style={[
+                        isLightMode
+                            ? commonStyles.light_medium_text_style
+                            : commonStyles.dark_medium_text_style,
+                        styles.darkTextStyle,
+                    ]}>
+                    {themeValue === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 };

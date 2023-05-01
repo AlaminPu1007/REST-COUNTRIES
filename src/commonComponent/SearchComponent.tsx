@@ -1,12 +1,16 @@
 import {StyleSheet, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import commonStyles from '../component/commonStyles';
-import ThemeSchema from '../component/ThemeSchema';
+// import ThemeSchema from '../component/ThemeSchema';
 import theme from '../component/theme';
+import {Context as DarkModeContext} from '../context/DarkModeContext';
 
 const SearchComponent = () => {
-    // get user device theme color
-    const [themeValue] = ThemeSchema();
+    // get user device theme color from context
+    const {
+        state: {themeValue},
+    } = useContext(DarkModeContext);
+
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
 

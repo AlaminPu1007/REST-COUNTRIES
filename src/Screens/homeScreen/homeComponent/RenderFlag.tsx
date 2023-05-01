@@ -6,18 +6,21 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native';
-import React from 'react';
-import ThemeSchema from '../../../component/ThemeSchema';
+import React, {useContext} from 'react';
 import commonStyles from '../../../component/commonStyles';
 import theme from '../../../component/theme';
 import {Props} from '../../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
 import {useNavigation} from '@react-navigation/native';
+import {Context as DarkModeContext} from '../../../context/DarkModeContext';
 
 const {width} = Dimensions.get('window');
 
 const RenderFlag = ({data}: any) => {
-    // get user device theme color
-    const [themeValue] = ThemeSchema();
+    // get user device theme color from context
+    const {
+        state: {themeValue},
+    } = useContext(DarkModeContext);
+
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
     // define use-navigation to access navigation
@@ -28,7 +31,7 @@ const RenderFlag = ({data}: any) => {
 
     return (
         <TouchableOpacity
-            activeOpacity={0.8}
+            // activeOpacity={0.8}
             onPress={navigateToItemPreview}
             style={[
                 isLightMode
