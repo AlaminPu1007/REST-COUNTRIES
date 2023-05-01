@@ -6,23 +6,25 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {PreviewScreenNavigationProp} from '../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
 import Api from '../../api/Api';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import ThemeSchema from '../../component/ThemeSchema';
 import commonStyles from '../../component/commonStyles';
 import Header from '../../commonComponent/Header';
 import theme from '../../component/theme';
 import {heightToDp} from '../../component/Responsive';
+import {Context as DarkModeContext} from '../../context/DarkModeContext';
 
 const {width} = Dimensions.get('window');
 
 const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
     const {name} = route.params;
+    // get user device theme color from context
+    const {
+        state: {themeValue},
+    } = useContext(DarkModeContext);
 
-    // get user device theme color
-    const [themeValue] = ThemeSchema();
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
 
