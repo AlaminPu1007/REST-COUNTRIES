@@ -49,6 +49,8 @@ const HomeScreen = () => {
     const getCountriesList = async () => {
         try {
             const response = await Api.get('/all');
+
+            // store into state
             setCountriesList(response.data || []);
 
             setLoading(false);
