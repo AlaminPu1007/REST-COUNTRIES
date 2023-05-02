@@ -5,6 +5,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    ScrollView,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {PreviewScreenNavigationProp} from '../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
@@ -15,8 +16,9 @@ import Header from '../../commonComponent/Header';
 import theme from '../../component/theme';
 import {heightToDp} from '../../component/Responsive';
 import {Context as DarkModeContext} from '../../context/DarkModeContext';
+import OrientedScreen from '../../app-helpers/OrientedScreen';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
     const {name} = route.params;
@@ -24,12 +26,26 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
     const {
         state: {themeValue},
     } = useContext(DarkModeContext);
+    // get user screen type
 
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
 
     //define state
     const [countryInfo, setCountryInfo] = useState<any>({});
+    const [orientation, setOrientation] = useState<string>(
+        OrientedScreen.isPortrait() ? 'portrait' : 'landscape',
+    );
+
+    //handle orientation screen
+    useEffect(() => {
+        const subscription = Dimensions.addEventListener('change', () => {
+            setOrientation(
+                OrientedScreen.isPortrait() ? 'portrait' : 'landscape',
+            );
+        });
+        return () => subscription?.remove();
+    }, []);
 
     useEffect(() => {
         getCountryInfo();
@@ -42,7 +58,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                 `https://restcountries.com/v3.1/name/${name}`,
             );
             //store info
-            setCountryInfo(res.data[0] || {});
+            setCountryInfo(res?.data[0] || {});
         } catch (errors: any) {
             if (__DEV__) {
                 console.log(errors.message);
@@ -52,54 +68,87 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
 
     return (
         <SafeAreaView style={commonStyles.safeAreaViewStyle}>
-            <View
-                style={[
-                    isLightMode
-                        ? commonStyles.light_container
-                        : commonStyles.dark_container,
-                    styles.container,
-                ]}>
-                <Header title="Where in the world ?" />
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    // onPress={navigateToItemPreview}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={styles.scrollView}
+                contentContainerStyle={styles.scrollViewStyle}>
+                <View
                     style={[
                         isLightMode
-                            ? commonStyles.light_background_color
-                            : commonStyles.dark_background_color,
-                        styles.btnContainer,
+                            ? commonStyles.light_container
+                            : commonStyles.dark_container,
+                        styles.container,
                     ]}>
-                    <Image
-                        style={styles.imageStyle}
-                        source={{uri: countryInfo?.flags?.png}}
-                    />
-                    <View style={styles.countryInfo}>
-                        <Text
-                            style={[
-                                isLightMode
-                                    ? commonStyles.light_large_text_style
-                                    : commonStyles.dark_large_text_style,
-                                styles.countryNameStyle,
-                            ]}>
-                            {countryInfo?.name?.common || 'country-name'}
-                        </Text>
-                        <View>
-                            <Text>
-                                Population :{' '}
-                                <Text>{countryInfo?.population || 0}</Text>{' '}
+                    <Header title="Where in the world ?" />
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        // onPress={navigateToItemPreview}
+                        style={[
+                            isLightMode
+                                ? commonStyles.light_background_color
+                                : commonStyles.dark_background_color,
+                            styles.btnContainer,
+                        ]}>
+                        {countryInfo?.flags?.png && (
+                            <Image
+                                style={
+                                    orientation === 'portrait'
+                                        ? styles.imageStyle
+                                        : styles.imageStylesForLandSpace
+                                }
+                                source={{uri: countryInfo?.flags?.png}}
+                            />
+                        )}
+                        <View style={styles.countryInfo}>
+                            <Text
+                                style={[
+                                    isLightMode
+                                        ? commonStyles.light_large_text_style
+                                        : commonStyles.dark_large_text_style,
+                                    styles.countryNameStyle,
+                                ]}>
+                                {countryInfo?.name?.common || 'country-name'}
                             </Text>
-                            <Text>
-                                Region :{' '}
-                                <Text>{countryInfo?.region || 'region'}</Text>{' '}
-                            </Text>
-                            <Text>
-                                Capital :{' '}
-                                <Text>{countryInfo?.capital || 'capital'}</Text>{' '}
-                            </Text>
+                            <View>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
+                                    Population :{' '}
+                                    <Text>{countryInfo?.population || 0}</Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
+                                    Region :{' '}
+                                    <Text>
+                                        {countryInfo?.region || 'region'}
+                                    </Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
+                                    Capital :{' '}
+                                    <Text>
+                                        {countryInfo?.capital || 'capital'}
+                                    </Text>{' '}
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -107,6 +156,14 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
 const styles = StyleSheet.create({
     container: {
         // borderWidth: 1,
+        width: '100%',
+    },
+    scrollView: {
+        width: '100%',
+    },
+    scrollViewStyle: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
         width: '100%',
     },
     btnContainer: {
@@ -128,6 +185,13 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
     },
+    imageStylesForLandSpace: {
+        width: height - 65,
+        height: 260,
+        resizeMode: 'stretch',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
     countryInfo: {
         marginHorizontal: 30,
         paddingVertical: 40,
@@ -136,6 +200,9 @@ const styles = StyleSheet.create({
         fontSize: theme.FONT_SIZE_LARGE + 5,
         fontWeight: '700',
         paddingBottom: 20,
+    },
+    padding_vertical: {
+        paddingVertical: heightToDp(0.5),
     },
 });
 

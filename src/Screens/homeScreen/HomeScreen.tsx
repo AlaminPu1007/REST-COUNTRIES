@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import commonStyles from '../../component/commonStyles';
-// import ThemeSchema from '../../component/ThemeSchema';
 import Header from '../../commonComponent/Header';
 import SearchComponent from '../../commonComponent/SearchComponent';
 import Api from '../../api/Api';
@@ -81,26 +80,23 @@ const HomeScreen = () => {
                         <SearchComponent />
                         {!loading ? (
                             countryList?.length ? (
-                                countryList?.map((item: any) => {
-                                    return (
-                                        <View
-                                            style={
-                                                styles.scrollViewChildContainer
-                                            }
-                                            key={
-                                                item?.name?.common || Date.now()
-                                            }>
-                                            <RenderFlag data={item} />
-                                        </View>
-                                    );
-                                })
+                                <View style={styles.scrollViewChildContainer}>
+                                    <RenderFlag rootData={countryList} />
+                                </View>
                             ) : (
                                 <Text>No item is found!</Text>
                             )
                         ) : (
                             <View>
                                 <ActivityIndicator size="large" />
-                                <Text>Loading...</Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_medium_text_style
+                                            : commonStyles.dark_medium_text_style,
+                                    ]}>
+                                    Loading...
+                                </Text>
                             </View>
                         )}
                     </View>

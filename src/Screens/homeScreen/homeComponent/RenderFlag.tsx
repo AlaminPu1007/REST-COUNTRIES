@@ -6,63 +6,115 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import commonStyles from '../../../component/commonStyles';
 import theme from '../../../component/theme';
 import {Props} from '../../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
 import {useNavigation} from '@react-navigation/native';
 import {Context as DarkModeContext} from '../../../context/DarkModeContext';
+import {heightToDp} from '../../../component/Responsive';
+import OrientedScreen from '../../../app-helpers/OrientedScreen';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const RenderFlag = ({data}: any) => {
+const RenderFlag = ({rootData}: any) => {
     // get user device theme color from context
     const {
         state: {themeValue},
     } = useContext(DarkModeContext);
+
+    //define state
+    const [orientation, setOrientation] = useState<string>(
+        OrientedScreen.isPortrait() ? 'portrait' : 'landscape',
+    );
 
     // get boolean value of theme
     const isLightMode = themeValue === 'light';
     // define use-navigation to access navigation
     const navigation: any = useNavigation<Props>();
 
-    const navigateToItemPreview = () =>
-        navigation.navigate('preview', {name: data.name.common});
+    const navigateToItemPreview = (value: string) =>
+        navigation.navigate('preview', {name: value});
+
+    //handle orientation screen
+    useEffect(() => {
+        const subscription = Dimensions.addEventListener('change', () => {
+            setOrientation(
+                OrientedScreen.isPortrait() ? 'portrait' : 'landscape',
+            );
+        });
+        return () => subscription?.remove();
+    }, []);
 
     return (
-        <TouchableOpacity
-            // activeOpacity={0.8}
-            onPress={navigateToItemPreview}
-            style={[
-                isLightMode
-                    ? commonStyles.light_background_color
-                    : commonStyles.dark_background_color,
-                styles.container,
-            ]}>
-            <Image style={styles.imageStyle} source={{uri: data?.flags?.png}} />
-            <View style={styles.countryInfo}>
-                <Text
-                    style={[
-                        isLightMode
-                            ? commonStyles.light_large_text_style
-                            : commonStyles.dark_large_text_style,
-                        styles.countryNameStyle,
-                    ]}>
-                    {data.name.common}
-                </Text>
-                <View>
-                    <Text>
-                        Population : <Text>{data?.population || 0}</Text>{' '}
-                    </Text>
-                    <Text>
-                        Region : <Text>{data?.region || 'region'}</Text>{' '}
-                    </Text>
-                    <Text>
-                        Capital : <Text>{data?.capital || 'capital'}</Text>{' '}
-                    </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
+        <View>
+            {rootData?.map((data: any) => {
+                return (
+                    <TouchableOpacity
+                        // activeOpacity={0.8}
+                        onPress={() => {
+                            navigateToItemPreview(data.name.common);
+                        }}
+                        key={data?.name?.common || Date.now()}
+                        style={[
+                            isLightMode
+                                ? commonStyles.light_background_color
+                                : commonStyles.dark_background_color,
+                            styles.container,
+                        ]}>
+                        <Image
+                            style={
+                                orientation === 'portrait'
+                                    ? styles.imageStyle
+                                    : styles.imageStylesForLandSpace
+                            }
+                            source={{uri: data?.flags?.png}}
+                        />
+                        <View style={styles.countryInfo}>
+                            <Text
+                                style={[
+                                    isLightMode
+                                        ? commonStyles.light_large_text_style
+                                        : commonStyles.dark_large_text_style,
+                                    styles.countryNameStyle,
+                                ]}>
+                                {data.name.common}
+                            </Text>
+                            <View>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
+                                    Population :{' '}
+                                    <Text>{data?.population || 0}</Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                    ]}>
+                                    Region :{' '}
+                                    <Text>{data?.region || 'region'}</Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                    ]}>
+                                    Capital :{' '}
+                                    <Text>{data?.capital || 'capital'}</Text>{' '}
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                );
+            })}
+        </View>
     );
 };
 
@@ -88,6 +140,13 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
     },
+    imageStylesForLandSpace: {
+        width: height - 65,
+        height: 260,
+        resizeMode: 'stretch',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
     countryInfo: {
         marginHorizontal: 30,
         paddingVertical: 40,
@@ -96,5 +155,8 @@ const styles = StyleSheet.create({
         fontSize: theme.FONT_SIZE_LARGE + 5,
         fontWeight: '700',
         paddingBottom: 20,
+    },
+    padding_vertical: {
+        paddingVertical: heightToDp(0.5),
     },
 });
