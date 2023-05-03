@@ -5,8 +5,9 @@ import {
     View,
     Dimensions,
     TouchableOpacity,
+    VirtualizedList,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {memo, useContext, useEffect, useState} from 'react';
 import commonStyles from '../../../component/commonStyles';
 import theme from '../../../component/theme';
 import {Props} from '../../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
@@ -46,79 +47,107 @@ const RenderFlag = ({rootData}: any) => {
         return () => subscription?.remove();
     }, []);
 
-    return (
-        <View>
-            {rootData?.map((data: any) => {
-                return (
-                    <TouchableOpacity
-                        // activeOpacity={0.8}
-                        onPress={() => {
-                            navigateToItemPreview(data.name.common);
-                        }}
-                        key={data?.name?.common || Date.now()}
+    /**
+     * description :- It will render each country
+     * @created_by :- {ALAMIN}
+     * @created_at :- 03/05/2023 21:06:35
+     */
+    const renderItem = (item: any) => {
+        const {item: data} = item;
+
+        return (
+            <TouchableOpacity
+                // activeOpacity={0.8}
+                onPress={() => {
+                    navigateToItemPreview(data.name.common);
+                }}
+                key={data?.name?.common || Date.now()}
+                style={[
+                    isLightMode
+                        ? commonStyles.light_background_color
+                        : commonStyles.dark_background_color,
+                    styles.container,
+                ]}>
+                {data?.flags?.png && (
+                    <Image
+                        style={
+                            orientation === 'portrait'
+                                ? styles.imageStyle
+                                : styles.imageStylesForLandSpace
+                        }
+                        source={{uri: data?.flags?.png}}
+                    />
+                )}
+                <View style={styles.countryInfo}>
+                    <Text
                         style={[
                             isLightMode
-                                ? commonStyles.light_background_color
-                                : commonStyles.dark_background_color,
-                            styles.container,
+                                ? commonStyles.light_large_text_style
+                                : commonStyles.dark_large_text_style,
+                            styles.countryNameStyle,
                         ]}>
-                        <Image
-                            style={
-                                orientation === 'portrait'
-                                    ? styles.imageStyle
-                                    : styles.imageStylesForLandSpace
-                            }
-                            source={{uri: data?.flags?.png}}
-                        />
-                        <View style={styles.countryInfo}>
-                            <Text
-                                style={[
-                                    isLightMode
-                                        ? commonStyles.light_large_text_style
-                                        : commonStyles.dark_large_text_style,
-                                    styles.countryNameStyle,
-                                ]}>
-                                {data.name.common}
-                            </Text>
-                            <View>
-                                <Text
-                                    style={[
-                                        isLightMode
-                                            ? commonStyles.light_small_text_style
-                                            : commonStyles.dark_small_text_style,
-                                        styles.padding_vertical,
-                                    ]}>
-                                    Population :{' '}
-                                    <Text>{data?.population || 0}</Text>{' '}
-                                </Text>
-                                <Text
-                                    style={[
-                                        isLightMode
-                                            ? commonStyles.light_small_text_style
-                                            : commonStyles.dark_small_text_style,
-                                    ]}>
-                                    Region :{' '}
-                                    <Text>{data?.region || 'region'}</Text>{' '}
-                                </Text>
-                                <Text
-                                    style={[
-                                        isLightMode
-                                            ? commonStyles.light_small_text_style
-                                            : commonStyles.dark_small_text_style,
-                                    ]}>
-                                    Capital :{' '}
-                                    <Text>{data?.capital || 'capital'}</Text>{' '}
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                );
-            })}
+                        {data?.name?.common}
+                    </Text>
+                    <View>
+                        <Text
+                            style={[
+                                isLightMode
+                                    ? commonStyles.light_small_text_style
+                                    : commonStyles.dark_small_text_style,
+                                styles.padding_vertical,
+                            ]}>
+                            Population : <Text>{data?.population || 0}</Text>{' '}
+                        </Text>
+                        <Text
+                            style={[
+                                isLightMode
+                                    ? commonStyles.light_small_text_style
+                                    : commonStyles.dark_small_text_style,
+                            ]}>
+                            Region : <Text>{data?.region || 'region'}</Text>{' '}
+                        </Text>
+                        <Text
+                            style={[
+                                isLightMode
+                                    ? commonStyles.light_small_text_style
+                                    : commonStyles.dark_small_text_style,
+                            ]}>
+                            Capital : <Text>{data?.capital || 'capital'}</Text>{' '}
+                        </Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    };
+
+    type ItemData = {
+        name: any,
+        id: string,
+        title: string,
+    };
+
+    const getItem = (_data: any, index: number): ItemData => {
+        return _data[index];
+    };
+
+    const getItemCount = (_data: unknown) => rootData?.length;
+
+    return (
+        <View>
+            <VirtualizedList
+                initialNumToRender={4}
+                data={rootData}
+                renderItem={renderItem}
+                keyExtractor={item => item.name.common}
+                getItemCount={getItemCount}
+                getItem={getItem}
+                showsVerticalScrollIndicator={false}
+            />
         </View>
     );
 };
 
-export default RenderFlag;
+export default memo(RenderFlag);
 
 const styles = StyleSheet.create({
     container: {

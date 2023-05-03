@@ -3,7 +3,7 @@ import {
     StyleSheet,
     View,
     Text,
-    ScrollView,
+    // ScrollView,
     ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
@@ -74,43 +74,43 @@ const HomeScreen = () => {
                 <Header title="Where in the world ?" />
 
                 {/* render all flag */}
-                <ScrollView
+                {/* <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scrollView}
-                    contentContainerStyle={styles.scrollViewStyle}>
-                    <View style={styles.scrollViewChildContainer}>
-                        <SearchComponent />
-                        {!loading ? (
-                            countryList?.length ? (
-                                <View style={styles.scrollViewChildContainer}>
-                                    <RenderFlag rootData={countryList} />
-                                </View>
-                            ) : (
-                                <Text
-                                    style={[
-                                        isLightMode
-                                            ? commonStyles.light_medium_text_style
-                                            : commonStyles.dark_medium_text_style,
-                                        styles.resultIsNotFound,
-                                    ]}>
-                                    No item is found!
-                                </Text>
-                            )
-                        ) : (
-                            <View style={styles.resultIsNotFound}>
-                                <ActivityIndicator size="large" />
-                                <Text
-                                    style={[
-                                        isLightMode
-                                            ? commonStyles.light_medium_text_style
-                                            : commonStyles.dark_medium_text_style,
-                                    ]}>
-                                    Loading...
-                                </Text>
+                    contentContainerStyle={styles.scrollViewStyle}> */}
+                <View style={styles.scrollViewChildContainer}>
+                    <SearchComponent />
+                    {!loading ? (
+                        countryList?.length ? (
+                            <View style={styles.scrollViewChildContainer}>
+                                <RenderFlag rootData={countryList} />
                             </View>
-                        )}
-                    </View>
-                </ScrollView>
+                        ) : (
+                            <Text
+                                style={[
+                                    isLightMode
+                                        ? commonStyles.light_medium_text_style
+                                        : commonStyles.dark_medium_text_style,
+                                    styles.resultIsNotFound,
+                                ]}>
+                                No item is found!
+                            </Text>
+                        )
+                    ) : (
+                        <View style={styles.resultIsNotFound}>
+                            <ActivityIndicator size="large" />
+                            <Text
+                                style={[
+                                    isLightMode
+                                        ? commonStyles.light_medium_text_style
+                                        : commonStyles.dark_medium_text_style,
+                                ]}>
+                                Loading...
+                            </Text>
+                        </View>
+                    )}
+                </View>
+                {/* </ScrollView> */}
             </View>
         </SafeAreaView>
     );
