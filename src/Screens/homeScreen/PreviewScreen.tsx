@@ -65,6 +65,31 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
             }
         }
     };
+    /**
+     * description :-If any result is not found then it will return this method
+     * @created_by :- {ALAMIN}
+     * @created_at :- 03/05/2023 20:59:59
+     */
+    if (!Object.keys(countryInfo).length) {
+        return (
+            <View
+                style={[
+                    isLightMode
+                        ? commonStyles.light_container
+                        : commonStyles.dark_container,
+                    styles.noResultFound,
+                ]}>
+                <Text
+                    style={[
+                        isLightMode
+                            ? commonStyles.light_medium_text_style
+                            : commonStyles.dark_medium_text_style,
+                    ]}>
+                    Result is found!
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={commonStyles.safeAreaViewStyle}>
@@ -117,8 +142,24 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                                             : commonStyles.dark_small_text_style,
                                         styles.padding_vertical,
                                     ]}>
+                                    Native Name :{' '}
+                                    <Text>
+                                        {countryInfo?.name?.nativeName?.eng
+                                            .common || 'native-name'}
+                                    </Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
                                     Population :{' '}
-                                    <Text>{countryInfo?.population || 0}</Text>{' '}
+                                    <Text>
+                                        {countryInfo?.population ||
+                                            'population'}
+                                    </Text>{' '}
                                 </Text>
                                 <Text
                                     style={[
@@ -130,6 +171,18 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                                     Region :{' '}
                                     <Text>
                                         {countryInfo?.region || 'region'}
+                                    </Text>{' '}
+                                </Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_small_text_style
+                                            : commonStyles.dark_small_text_style,
+                                        styles.padding_vertical,
+                                    ]}>
+                                    Subregion :{' '}
+                                    <Text>
+                                        {countryInfo?.subregion || 'subregion'}
                                     </Text>{' '}
                                 </Text>
                                 <Text
@@ -203,6 +256,11 @@ const styles = StyleSheet.create({
     },
     padding_vertical: {
         paddingVertical: heightToDp(0.5),
+    },
+    noResultFound: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

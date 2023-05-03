@@ -13,6 +13,7 @@ import SearchComponent from '../../commonComponent/SearchComponent';
 import Api from '../../api/Api';
 import RenderFlag from './homeComponent/RenderFlag';
 import {Context as DarkModeContext} from '../../context/DarkModeContext';
+import {heightToDp} from '../../component/Responsive';
 
 const HomeScreen = () => {
     // get user device theme color from context
@@ -24,8 +25,8 @@ const HomeScreen = () => {
     const isLightMode = themeValue === 'light';
 
     // define state
-    const [countryList, setCountriesList] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [countryList, setCountriesList] = useState<any[]>([]);
+    const [loading, setLoading] = useState<Boolean>(true);
 
     /**
      * description :- To get all countries lis through API
@@ -51,14 +52,13 @@ const HomeScreen = () => {
             const response = await Api.get('/all');
 
             // store into state
-            setCountriesList(response.data || []);
-
-            setLoading(false);
+            setCountriesList(prv => [...prv, ...(response.data || [])]);
         } catch (errors) {
-            setLoading(false);
             if (__DEV__) {
                 console.log(errors, 'from Home screen component');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -86,10 +86,18 @@ const HomeScreen = () => {
                                     <RenderFlag rootData={countryList} />
                                 </View>
                             ) : (
-                                <Text>No item is found!</Text>
+                                <Text
+                                    style={[
+                                        isLightMode
+                                            ? commonStyles.light_medium_text_style
+                                            : commonStyles.dark_medium_text_style,
+                                        styles.resultIsNotFound,
+                                    ]}>
+                                    No item is found!
+                                </Text>
                             )
                         ) : (
-                            <View>
+                            <View style={styles.resultIsNotFound}>
                                 <ActivityIndicator size="large" />
                                 <Text
                                     style={[
@@ -126,5 +134,8 @@ const styles = StyleSheet.create({
     scrollViewChildContainer: {
         alignItems: 'center',
         width: '100%',
+    },
+    resultIsNotFound: {
+        marginTop: heightToDp(20),
     },
 });
