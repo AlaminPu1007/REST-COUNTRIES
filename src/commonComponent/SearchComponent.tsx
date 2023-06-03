@@ -5,7 +5,11 @@ import commonStyles from '../component/commonStyles';
 import theme from '../component/theme';
 import {Context as DarkModeContext} from '../context/DarkModeContext';
 
-const SearchComponent = () => {
+interface propTypes {
+    callBackTxt: any;
+}
+
+const SearchComponent = ({callBackTxt}: propTypes) => {
     // get user device theme color from context
     const {
         state: {themeValue},
@@ -23,7 +27,10 @@ const SearchComponent = () => {
      * @created_by :- {ALAMIN}
      * @created_at :- 25/03/2023 14:26:41
      */
-    const onChangeTextMethod = (text: string) => setTextInput(text);
+    const onChangeTextMethod = (text: string) => {
+        callBackTxt(text);
+        setTextInput(text);
+    };
     return (
         <View
             style={[

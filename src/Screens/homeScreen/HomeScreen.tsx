@@ -6,7 +6,7 @@ import {
     // ScrollView,
     ActivityIndicator,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useTransition} from 'react';
 import commonStyles from '../../component/commonStyles';
 import Header from '../../commonComponent/Header';
 import SearchComponent from '../../commonComponent/SearchComponent';
@@ -26,7 +26,9 @@ const HomeScreen = () => {
 
     // define state
     const [countryList, setCountriesList] = useState<any[]>([]);
+    const [rootList, setCountriesRootList] = useState<any[]>([]);
     const [loading, setLoading] = useState<Boolean>(true);
+    const [isPending, startTransition] = useTransition();
 
     /**
      * description :- To get all countries lis through API
@@ -53,6 +55,7 @@ const HomeScreen = () => {
 
             // store into state
             setCountriesList(prv => [...prv, ...(response.data || [])]);
+            setCountriesRootList(prv => [...prv, ...(response.data || [])]);
         } catch (errors) {
             if (__DEV__) {
                 console.log(errors, 'from Home screen component');
@@ -60,6 +63,36 @@ const HomeScreen = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    /**
+     * description :- Get an call back from search-component
+     * @created_by :- {ALAMIN}
+     * @created_at :- 03/06/2023 16:17:35
+     */
+    const callBackTxt = (text: string) => {
+        startTransition(() => {
+            (async () => {
+                try {
+                    setLoading(true);
+
+                    const res = await Api.get(`/name/${text}`);
+
+                    if (res.data?.length) {
+                        setCountriesList(res.data);
+                    } else {
+                        setCountriesList(rootList);
+                    }
+                    setLoading(false);
+                } catch (errors) {
+                    setCountriesList(rootList);
+                    setLoading(false);
+                    if (__DEV__) {
+                        console.log(errors, 'errors');
+                    }
+                }
+            })();
+        });
     };
 
     return (
@@ -79,8 +112,8 @@ const HomeScreen = () => {
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollViewStyle}> */}
                 <View style={styles.scrollViewChildContainer}>
-                    <SearchComponent />
-                    {!loading ? (
+                    <SearchComponent callBackTxt={callBackTxt} />
+                    {!loading && !isPending ? (
                         countryList?.length ? (
                             <View style={styles.scrollViewChildContainer}>
                                 <RenderFlag rootData={countryList} />

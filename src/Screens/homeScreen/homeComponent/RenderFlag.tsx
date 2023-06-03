@@ -78,7 +78,7 @@ const RenderFlag = ({rootData}: any) => {
                         source={{uri: data?.flags?.png}}
                     />
                 )}
-                <View style={styles.countryInfo}>
+                <View style={[styles.countryInfo]}>
                     <Text
                         style={[
                             isLightMode
@@ -151,7 +151,7 @@ export default memo(RenderFlag);
 
 const styles = StyleSheet.create({
     container: {
-        width: '90%',
+        width: '100%',
         marginBottom: 30,
         borderRadius: 10,
         elevation: 1,
