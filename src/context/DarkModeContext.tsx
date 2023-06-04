@@ -52,9 +52,8 @@ const getThemeValue = (dispatch: Dispatch<Action>) => {
  */
 const setThemeValue = (dispatch: Dispatch<Action>) => {
     return async (value: string) => {
-        console.log(value, 'value');
+        const jsonValue = value;
 
-        const jsonValue = JSON.stringify(value);
         await AsyncStorage.setItem('@theme_value', jsonValue);
         dispatch({type: 'GET_THEME_VALUE_LOCAL_STORAGE', payload: value});
     };
