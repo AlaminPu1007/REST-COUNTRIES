@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     View,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {PreviewScreenNavigationProp} from '../../navigationFlow/drawerNav/homeStackNav/HomeStackNav';
@@ -36,6 +37,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
     const [orientation, setOrientation] = useState<string>(
         OrientedScreen.isPortrait() ? 'portrait' : 'landscape',
     );
+    const [loading, setLoading] = useState<boolean>(true);
 
     //handle orientation screen
     useEffect(() => {
@@ -57,14 +59,50 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
             const res = await Api.get(
                 `https://restcountries.com/v3.1/name/${name}`,
             );
+
             //store info
             setCountryInfo(res?.data[0] || {});
+
+            // stop loader
+            setLoading(prv => !prv);
         } catch (errors: any) {
+            setLoading(prv => !prv);
+
             if (__DEV__) {
                 console.log(errors.message);
             }
         }
     };
+
+    /**
+     * description :- return loader view
+     * @author {Alamin}
+     * @created_by :- {ALAMIN}
+     * @created_at :- 05/06/2023 21:02:06
+     */
+    if (loading) {
+        return (
+            <View
+                style={[
+                    isLightMode
+                        ? commonStyles.light_container
+                        : commonStyles.dark_container,
+                    styles.resultIsNotFound,
+                ]}>
+                <ActivityIndicator size="large" />
+                <Text
+                    style={[
+                        isLightMode
+                            ? commonStyles.light_medium_text_style
+                            : commonStyles.dark_medium_text_style,
+                        styles.center_txt,
+                    ]}>
+                    Loading...
+                </Text>
+            </View>
+        );
+    }
+
     /**
      * description :-If any result is not found then it will return this method
      * @created_by :- {ALAMIN}
@@ -145,7 +183,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                                     Native Name :{' '}
                                     <Text>
                                         {countryInfo?.name?.nativeName?.eng
-                                            .common || 'native-name'}
+                                            ?.common || 'native-name'}
                                     </Text>{' '}
                                 </Text>
                                 <Text
@@ -261,6 +299,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    resultIsNotFound: {
+        paddingTop: heightToDp(20),
+    },
+    center_txt: {
+        textAlign: 'center',
     },
 });
 

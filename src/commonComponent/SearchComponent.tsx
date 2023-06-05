@@ -43,7 +43,10 @@ const SearchComponent = ({callBackTxt}: propTypes) => {
                 value={textInput}
                 placeholder="Search for a country..."
                 onChangeText={onChangeTextMethod}
-                style={styles.textInputStyle}
+                style={[
+                    styles.textInputStyle,
+                    !isLightMode ? styles.dark_mode_txt : null,
+                ]}
                 placeholderTextColor={theme.PLACE_HOLDER_TEXT_COLOR}
             />
         </View>
@@ -66,5 +69,8 @@ const styles = StyleSheet.create({
         fontSize: theme.FONT_SIZE_MEDIUM,
         color: theme.TEXT_PRIMARY_COLOR,
         letterSpacing: 0.5,
+    },
+    dark_mode_txt: {
+        color: theme.PRIMARY_COLOR_LIGHT,
     },
 });
