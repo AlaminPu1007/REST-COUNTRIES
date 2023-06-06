@@ -1,7 +1,8 @@
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useContext} from 'react';
 import commonStyles from '../component/commonStyles';
 import {Context as DarkModeContext} from '../context/DarkModeContext';
+
 interface Props {
     title: string;
 }
@@ -36,17 +37,11 @@ const Header = ({title = 'Where in the world ?'}: Props) => {
                 ]}>
                 {title}
             </Text>
-            <TouchableOpacity onPress={updateThemeValue}>
-                <Text
-                    // onPress={toggleTheme}
-                    style={[
-                        isLightMode
-                            ? commonStyles.light_medium_text_style
-                            : commonStyles.dark_medium_text_style,
-                        styles.darkTextStyle,
-                    ]}>
-                    {themeValue === 'light' ? 'Dark Mode' : 'Light Mode'}
-                </Text>
+            <TouchableOpacity onPress={updateThemeValue} activeOpacity={0.9}>
+                <Image
+                    source={require('../assets/preferences.png')}
+                    style={styles.dark_image}
+                />
             </TouchableOpacity>
         </View>
     );
@@ -60,7 +55,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 20,
         flexDirection: 'row',
-        alignContent: 'center',
+        alignItems: 'center',
         justifyContent: 'space-between',
         elevation: 1.5,
         // for ios
@@ -75,7 +70,10 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 20,
     },
-    darkTextStyle: {
-        fontWeight: '600',
+
+    dark_image: {
+        width: 30,
+        height: 30,
+        resizeMode: 'cover',
     },
 });

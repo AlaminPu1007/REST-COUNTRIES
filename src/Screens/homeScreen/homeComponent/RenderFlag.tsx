@@ -57,9 +57,9 @@ const RenderFlag = ({rootData}: any) => {
 
         return (
             <TouchableOpacity
-                // activeOpacity={0.8}
+                activeOpacity={0.9}
                 onPress={() => {
-                    navigateToItemPreview(data.name.common);
+                    navigateToItemPreview(data?.name?.common);
                 }}
                 key={data?.name?.common || Date.now()}
                 style={[

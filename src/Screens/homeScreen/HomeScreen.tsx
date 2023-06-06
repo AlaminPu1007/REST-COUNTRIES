@@ -61,7 +61,7 @@ const HomeScreen = () => {
                 console.log(errors, 'from Home screen component');
             }
         } finally {
-            setLoading(false);
+            setLoading(prv => !prv);
         }
     };
 
@@ -71,24 +71,26 @@ const HomeScreen = () => {
      * @created_at :- 03/06/2023 16:17:35
      */
     const callBackTxt = (text: string) => {
+        // if any text is not for search field
+        if (!text?.length) {
+            return setCountriesList(rootList);
+        }
+
         startTransition(() => {
             (async () => {
                 try {
-                    setLoading(true);
+                    setLoading(prv => !prv);
 
                     const res = await Api.get(`/name/${text}`);
 
-                    if (res.data?.length) {
-                        setCountriesList(res.data);
-                    } else {
-                        setCountriesList(rootList);
-                    }
-                    setLoading(false);
-                } catch (errors) {
-                    setCountriesList(rootList);
-                    setLoading(false);
+                    setCountriesList(res.data || []);
+
+                    setLoading(prv => !prv);
+                } catch (err) {
+                    setCountriesList([]);
+                    setLoading(prv => !prv);
                     if (__DEV__) {
-                        console.log(errors, 'errors');
+                        console.log(err, 'err');
                     }
                 }
             })();

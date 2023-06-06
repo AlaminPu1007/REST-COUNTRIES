@@ -144,7 +144,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                     ]}>
                     <Header title="Where in the world ?" />
                     <TouchableOpacity
-                        activeOpacity={0.8}
+                        activeOpacity={0.9}
                         // onPress={navigateToItemPreview}
                         style={[
                             isLightMode
@@ -173,7 +173,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                                 {countryInfo?.name?.common || 'country-name'}
                             </Text>
                             <View>
-                                <Text
+                                {/* <Text
                                     style={[
                                         isLightMode
                                             ? commonStyles.light_small_text_style
@@ -185,7 +185,7 @@ const PreviewScreen = ({route}: PreviewScreenNavigationProp) => {
                                         {countryInfo?.name?.nativeName?.eng
                                             ?.common || 'native-name'}
                                     </Text>{' '}
-                                </Text>
+                                </Text> */}
                                 <Text
                                     style={[
                                         isLightMode
