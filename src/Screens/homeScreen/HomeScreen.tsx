@@ -3,7 +3,6 @@ import {
     StyleSheet,
     View,
     Text,
-    // ScrollView,
     ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useEffect, useState, useTransition} from 'react';
@@ -109,10 +108,6 @@ const HomeScreen = () => {
                 <Header title="Where in the world ?" />
 
                 {/* render all flag */}
-                {/* <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={styles.scrollView}
-                    contentContainerStyle={styles.scrollViewStyle}> */}
                 <View style={styles.scrollViewChildContainer}>
                     <SearchComponent callBackTxt={callBackTxt} />
                     {!loading && !isPending ? (
@@ -145,7 +140,6 @@ const HomeScreen = () => {
                         </View>
                     )}
                 </View>
-                {/* </ScrollView> */}
             </View>
         </SafeAreaView>
     );
@@ -155,15 +149,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
     container: {
-        // borderWidth: 1,
-        width: '100%',
-    },
-    scrollViewStyle: {
-        flexGrow: 1,
-        justifyContent: 'flex-start',
-        width: '100%',
-    },
-    scrollView: {
         width: '100%',
     },
     scrollViewChildContainer: {
